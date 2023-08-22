@@ -14,10 +14,12 @@ export default function upLoad() {
   return (
     <div className="container">
       <Button className="upload-btn" type="primary" onClick={() => toPage('setFile')}>上传文件</Button>
-      <br/>
-      <Space direction="vertical" align="center">
-        <QRCode value={text || '-'} />
-      </Space>
+      <div>
+        <Space className="space" direction="vertical" align="center">
+          <QRCode value={text || '-'} />
+        </Space>
+      </div>
+
     </div>
   )
 }
