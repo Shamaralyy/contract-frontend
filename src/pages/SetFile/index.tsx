@@ -1,43 +1,59 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { Button, message, Upload, Modal, Input } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import type { UploadProps } from 'antd';
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import useValidate from '../../hooks/useValidate';
+import { uploadFile } from '@/api/setFile/setFile';
 import './index.css'
-
-const { Dragger } = Upload;
-
-const props: UploadProps = {
-  name: 'file',
-  multiple: true,
-  action: 'h',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log('iiii',info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-  beforeUpload: () => {
-    return false;
-  }
-};
 
 function App() {
   const navigate = useNavigate();
-  const { open, setOpen, password,iptStatus, changeIpt, ok } = useValidate(() => toPage(''), () => {});
+  const { open, setOpen, password, iptStatus, changeIpt, ok } = useValidate(commit, () => { });
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const { Dragger } = Upload;
 
   function toPage(url: string): void {
-    console.log(url);
     navigate(`/${url}`)
   }
+
+  const handleUpload = () => {
+    const formData = new FormData();
+    fileList.forEach((file) => {
+      formData.append('files[]', file as RcFile);
+    });
+    uploadFile(password, formData)
+      .then((res) => {
+        console.log('uploadFile-res', res);
+        message.success('上传成功');
+        setFileList([]);
+        toPage('');
+      })
+      .catch(() => {
+        message.error('上传失败');
+      })
+  }
+
+  function commit() {
+    if (!fileList.length) {
+      message.error('请先上传文件');
+    } else {
+      console.log('文件', fileList);
+      handleUpload();
+    }
+  }
+
+  const props: UploadProps = {
+    name: 'file',
+    multiple: true,
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+    beforeUpload: (file) => {
+      setFileList([...fileList, file]);
+      return false;
+    }
+  };
 
   return (
     <div className="container">

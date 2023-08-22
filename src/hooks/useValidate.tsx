@@ -21,13 +21,10 @@ function useValidate(successCallback: voidFn, failCallback: voidFn) {
 
     function ok() {
         if (!password) { //失败
-            console.log('error');
             setIptStatus('error')
             failCallback();
         } else {  //成功
             setOpen(false)
-            console.log(password);
-            // navigate('/')
             successCallback();
         }
     }

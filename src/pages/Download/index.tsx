@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Input, Button } from 'antd';
+import { Input, Button, message } from 'antd';
 import useValidate from '../../hooks/useValidate';
+import { getContract } from '@/api/download/download';
 import './index.css'
 
 const App: React.FC = () => {
@@ -9,7 +10,18 @@ const App: React.FC = () => {
     const navigate = useNavigate();
 
     function successCallback() {
-        navigate('/file')
+        getContract(password)
+            .then((res) => {
+                console.log('postPsw-res', res);
+                navigate('/file', {
+                    state: {
+                        html: res.data
+                    }
+                })
+            })
+            .catch(() => {
+                message.error('密码错误');
+            })
     }
 
     return (
