@@ -7,7 +7,11 @@ import useValidate from '../../hooks/useValidate';
 import { uploadFile } from '@/api/setFile/setFile';
 import './index.css'
 
-function App() {
+interface Props {
+  len: number;
+}
+
+function SetFile(props: Props) {
   const navigate = useNavigate();
   const { open, setOpen, password, iptStatus, changeIpt, ok } = useValidate(commit, () => { });
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -17,7 +21,32 @@ function App() {
     navigate(`/${url}`)
   }
 
-  const handleUpload = () => {
+  const draggerProps: UploadProps = {
+    name: 'file',
+    fileList,
+    onRemove: (file) => {
+      const index = fileList.indexOf(file);
+      const newFileList = fileList.slice();
+      newFileList.splice(index, 1);
+      setFileList(newFileList);
+    },
+    beforeUpload: (file) => {
+      setFileList([...fileList, file]);
+      return false;
+    },
+  };
+
+  function complete() {
+    if (!props.len) {
+      message.error('合同内容不能为空');
+    } else if (!fileList.length) {
+      message.error('请先上传文件');
+    } else {
+      setOpen(true)
+    }
+  }
+
+  function commit() {
     const formData = new FormData();
     fileList.forEach((file) => {
       formData.append('files[]', file as RcFile);
@@ -34,30 +63,9 @@ function App() {
       })
   }
 
-  function commit() {
-    if (!fileList.length) {
-      message.error('请先上传文件');
-    } else {
-      console.log('文件', fileList);
-      handleUpload();
-    }
-  }
-
-  const props: UploadProps = {
-    name: 'file',
-    multiple: true,
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
-    },
-    beforeUpload: (file) => {
-      setFileList([...fileList, file]);
-      return false;
-    }
-  };
-
   return (
-    <div className="container">
-      <Dragger {...props}>
+    <>
+      <Dragger {...draggerProps}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
@@ -67,7 +75,7 @@ function App() {
           banned files.
         </p>
       </Dragger>
-      <Button className='complete-btn' onClick={() => setOpen(true)}>完成</Button>
+      <Button className='complete-btn' onClick={complete} style={{ marginTop: 20 + fileList.length * 30 + 'px' }}>完成</Button>
       <Modal
         title="设置密码"
         open={open}
@@ -81,8 +89,8 @@ function App() {
         <Input className='ipt' status={iptStatus} placeholder="请输入密码……" value={password} onChange={e => changeIpt(e.target.value)} />
         <span className='tip'>{iptStatus && '密码不能为空'}</span>
       </Modal>
-    </div>
+    </>
   )
 }
 
-export default App
+export default SetFile
