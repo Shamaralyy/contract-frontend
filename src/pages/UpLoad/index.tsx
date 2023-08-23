@@ -1,4 +1,4 @@
-import { QRCode, Space, Button } from "antd";
+import { Button, Input } from "antd";
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react";
 import { getQRcode } from "@/api/upload/upload";
@@ -6,7 +6,7 @@ import './index.css'
 
 export default function upLoad() {
   const navigate = useNavigate();
-  const [text,] = useState('https://ant.design/');
+  const { TextArea } = Input;
   const [urls, setUrls] = useState<Array<string>>([]);
 
   useEffect(() => {
@@ -22,16 +22,24 @@ export default function upLoad() {
     navigate(`/${url}`)
   }
 
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log('Change:', e.target.value);
+  };
+
   return (
     <div className="container">
+      <TextArea
+        showCount
+        className="ipt-area"
+        onChange={onChange}
+        placeholder="请输入合同内容……"
+        autoSize={{ minRows: 10 }}
+      />
       <Button className="upload-btn" type="primary" onClick={() => toPage('setFile')}>上传文件</Button>
       <div>
         {
           urls.map(url => <img src={url} alt="" />)
         }
-        <Space className="space" direction="vertical" align="center">
-          <QRCode value={text || '-'} />
-        </Space>
       </div>
     </div>
   )

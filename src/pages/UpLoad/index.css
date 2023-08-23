@@ -7,6 +7,11 @@
     height: 100vh;
 }
 
+.ipt-area {
+    width: 60%;
+    margin-bottom: 24px;
+}
+
 .upload-btn {
     width: 160px;
 }
