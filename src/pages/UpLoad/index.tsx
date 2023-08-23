@@ -1,28 +1,12 @@
-import { Button, Input } from "antd";
-import { useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react";
-import { getQRcode } from "@/api/upload/upload";
+import { Input } from "antd";
+import { useState } from "react";
 import SetFile from "@/components/SetFile";
 import './index.css'
 
 export default function upLoad() {
-  const navigate = useNavigate();
   const { TextArea } = Input;
-  const [urls, setUrls] = useState<Array<string>>([]);
+  const [url, setUrl] = useState<string>('');
   const [value, setValue] = useState<string>('');
-
-  useEffect(() => {
-    getQRcode()
-      .then(res => {
-        console.log('getQRcode-res', res);
-        const newUrl = URL.createObjectURL(res.data);
-        setUrls([...urls, newUrl])
-      })
-  }, [])
-
-  function toPage(url: string) {
-    navigate(`/${url}`)
-  }
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value)
@@ -38,12 +22,7 @@ export default function upLoad() {
         value={value}
         autoSize={{ minRows: 10 }}
       />
-      <SetFile len={value.length}/>
-      <div>
-        {
-          urls.map(url => <img src={url} alt="" />)
-        }
-      </div>
+      {url ? <img className="QRcode" src={url} alt="" /> : <SetFile len={value.length} setUrl={setUrl}/>}
     </div>
   )
 }

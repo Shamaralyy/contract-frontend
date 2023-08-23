@@ -4,7 +4,7 @@
 
 .complete-btn {
     width: 100px;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 .ipt {
@@ -15,4 +15,8 @@
     color: red;
     font-size: 10px;
     margin-left: 3px;
+}
+
+.loading-space {
+    margin-top: 50px;
 }

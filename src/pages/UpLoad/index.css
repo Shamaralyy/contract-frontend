@@ -20,6 +20,7 @@
     width: 160px;
 }
 
-.space {
-    margin: 15px;
+.QRcode {
+    width: 150px;
+    height: 150px;
 }
