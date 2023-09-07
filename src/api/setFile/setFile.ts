@@ -1,8 +1,19 @@
 import request from "@/utils/request";
 
-export function uploadFile(psw: string, file: any) {
+// export function uploadFile(psw: string, file: any) {
+//     return request({
+//         url: '/uploadFile?password='+psw,
+//         method: 'post',
+//         headers: {
+//             'Content-Type': 'multipart/form-data'
+//         },
+//         data: file,
+//     })
+// }
+
+export function uploadFile(file: any) {
     return request({
-        url: '/uploadFile?password='+psw,
+        url: '/uploadFile',
         method: 'post',
         headers: {
             'Content-Type': 'multipart/form-data'
