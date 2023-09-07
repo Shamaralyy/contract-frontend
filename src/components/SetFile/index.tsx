@@ -116,58 +116,67 @@ function SetFile(props: Props) {
   function complete() {
     if (!props.len) {
       message.error('合同内容不能为空');
-    } 
-    // else if (!fileList.length) {
-    //   message.error('请先上传文件');
-    // }
-     else {
+    }
+    else if (!fileList.length) {
+      message.error('请先上传文件');
+    }
+    else {
       setOpen(true)
     }
   }
 
   //输入密码后点击确认按钮
   function commit() {
-    // const formData = new FormData();
-    // fileList.forEach((file) => {
-    //   console.log('file', file);
-    //   formData.append('files[]', file as RcFile);
-    //   console.log('formData', formData);
-    // });
-    // setIsGenerate(true);
-    // console.log(formData.get('files[]'));
-    uploadChunk();
-    // uploadFile(password, formData)
-    //   .then((res) => {
-    //     console.log('uploadFile-res', res);
-    //     message.success('上传成功');
-    //     props.setUrl(res.data)   //二维码url
-    //     setFileList([]);
-    //     setIsGenerate(false);
-    //   })
-    //   .catch(() => {
-    //     message.error('上传失败');
-    //     setIsGenerate(false);
-    //   })
+    const formData = new FormData();
+    fileList.forEach((file) => {
+      console.log('file', file);
+      formData.append('files[]', file as RcFile);
+      console.log('formData', formData);
+    });
+    setIsGenerate(true);
+    console.log(formData.getAll('files[]'));
+    // uploadChunk();
+    uploadFile(password, formData)
+      .then((res) => {
+        console.log('uploadFile-res', res);
+        message.success('上传成功');
+        props.setUrl(res.data)   //二维码url
+        setFileList([]);
+        setIsGenerate(false);
+      })
+      .catch(() => {
+        message.error('上传失败');
+        setIsGenerate(false);
+      })
   }
 
   const chunkRefs: any = useRef([]); // 保存分片引用的引用
   const md5Ref: any = useRef(""); // 保存 MD5 值的引用
+  const formData = new FormData();
 
   const handleFileChange = async ({ file }: any) => {
     const md5 = await calculateMD5(file); // 计算文件的 MD5 值
     md5Ref.current = md5; // 保存 MD5 值到引用
+    console.log('fileeee', file);
 
     // 将文件划分成多个分片并保存到引用对象中
     const chunksList: any = chunkFile(file, 5 * 1024 * 1024);
+    console.log('chunksList',chunksList);
+    
+    //chunkRefs:将多个chunk转为formData
     chunkRefs.current = chunksList.map((chunk: any, index: any) => {
-      const formData = new FormData();
       formData.append("file", chunk);
       formData.append("fileName", file.name);
       formData.append("totalPieces", chunksList.length);
       formData.append("sliceIndex", index.toString());
       formData.append("md5", md5Ref.current); // 添加 MD5 参数
+
+      console.log('formData.getAll("fileName")',formData.getAll("fileName"));
       return formData;
     });
+
+    console.log('chunkRefs.current',chunkRefs.current);
+
   };
 
   const handleRemove = () => {
@@ -183,7 +192,7 @@ function SetFile(props: Props) {
 
   const setFileSpace = (
     <div>
-      <Upload
+      {/* <Upload
         name="file"
         multiple={false}
         beforeUpload={() => false}
@@ -193,8 +202,8 @@ function SetFile(props: Props) {
         <Button icon={<UploadOutlined />}>
           "选择文件"
         </Button>
-      </Upload>
-      {/* <Dragger {...draggerProps}>
+      </Upload> */}
+      <Dragger {...draggerProps}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
@@ -203,7 +212,7 @@ function SetFile(props: Props) {
           Support for a single or bulk upload. Strictly prohibited from uploading company data or other
           banned files.
         </p>
-      </Dragger> */}
+      </Dragger>
       <Button className='complete-btn' onClick={complete}>完成</Button>
       <Modal
         title="设置密码"

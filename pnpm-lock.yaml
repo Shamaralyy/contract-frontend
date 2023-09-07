@@ -29,6 +29,9 @@ dependencies:
   react-router-dom:
     specifier: ^6.14.2
     version: registry.npmmirror.com/react-router-dom@6.14.2(react-dom@18.2.0)(react@18.2.0)
+  spark-md5:
+    specifier: ^3.0.2
+    version: registry.npmmirror.com/spark-md5@3.0.2
 
 devDependencies:
   '@types/node':
@@ -3290,6 +3293,12 @@ packages:
     version: 1.0.2
     engines: {node: '>=0.10.0'}
     dev: true
+
+  registry.npmmirror.com/spark-md5@3.0.2:
+    resolution: {integrity: sha512-wcFzz9cDfbuqe0FZzfi2or1sgyIrsDwmPwfZC4hiNidPdPINjeUwNfv5kldczoEAcjl9Y1L3SM7Uz2PUEQzxQw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/spark-md5/-/spark-md5-3.0.2.tgz}
+    name: spark-md5
+    version: 3.0.2
+    dev: false
 
   registry.npmmirror.com/stackblur-canvas@2.6.0:
     resolution: {integrity: sha512-8S1aIA+UoF6erJYnglGPug6MaHYGo1Ot7h5fuXx4fUPvcvQfcdw2o/ppCse63+eZf8PPidSu4v1JnmEVtEDnpg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/stackblur-canvas/-/stackblur-canvas-2.6.0.tgz}
