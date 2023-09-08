@@ -11,13 +11,18 @@ import request from "@/utils/request";
 //     })
 // }
 
-export function uploadFile(file: any) {
+export function uploadFile(file: any,name:string,chunks:number,chunk:any) {
     return request({
         url: '/uploadFile',
         method: 'post',
         headers: {
             'Content-Type': 'multipart/form-data'
         },
-        data: file,
+        data: {
+            file,
+            name,
+            chunks,
+            chunk
+        }
     })
 }

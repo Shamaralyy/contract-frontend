@@ -1,11 +1,10 @@
 import { useRef } from 'react'
 import SparkMD5 from "spark-md5";
-import { message } from 'antd';
 
 export default function useFileSlicing(uploadFile, paramObj) {
     const chunkRefs: any = useRef([]); // 保存分片引用的引用
     const md5Ref: any = useRef(""); // 保存 MD5 值的引用
-    const { password, fileArr, setFileList, setIsGenerate } = paramObj;
+    const { fileArr } = paramObj;
 
     // 计算文件的 MD5 值
     function calculateMD5(file: any) {
@@ -59,14 +58,12 @@ export default function useFileSlicing(uploadFile, paramObj) {
     const formDataArr: any = [];
     const handleFileChange = () => {
         // 返回promise，否则不能拿到最新formDataArr.length，会导致index >= formDataArr.length判断有误
-        return new Promise((resolve,_reject) => {
-            console.log('fileArr', fileArr);
+        return new Promise((resolve, _reject) => {
             fileArr.forEach(async (file: any) => {
                 const md5 = await calculateMD5(file); // 计算文件的 MD5 值
                 md5Ref.current = md5; // 保存 MD5 值到引用
                 // 将文件划分成多个分片并保存到引用对象中
                 const chunksList: any = chunkFile(file, 5 * 1024 * 1024);
-                console.log('chunksList', chunksList);
                 const formData = new FormData();
                 //chunkRefs:将多个chunk转为formData
                 chunkRefs.current = chunksList.map((chunk: any, index: any) => {
@@ -79,45 +76,28 @@ export default function useFileSlicing(uploadFile, paramObj) {
                 });
                 formDataArr.push(chunkRefs.current);
                 resolve(formDataArr);
-                console.log('formDataArr', formDataArr);
             })
         })
     };
 
     async function uploadChunk() {
-        setIsGenerate(false);
-        await handleFileChange();
-        // 定义递归函数用于逐个上传分片
-        const uploadChunk = async (index: any) => {
-            console.log(`index`, index);
-            console.log(`formDataArr.length`, formDataArr.length);
-            if (index >= formDataArr.length) {
-                // 所有分片上传完成
-                message.success("文件上传成功！");
-                console.log("文件上传成功！");
-                return;
+        return new Promise(async (resolve, reject) => {
+            await handleFileChange();
+            let len = 0;
+            for (let index = 0; index < formDataArr.length; index++) {
+                formDataArr[index].forEach(async (item: any) => {
+                    try {
+                        const res = await uploadFile(item.get("file"), item.get("name"), item.get("chunks"), item.get("chunk")); // 调用上传函数上传当前分片，此处为调用上传的接口
+                        console.log('uploadFile-res', res);
+                        len++;
+                    } catch (error) {
+                        reject(error);
+                        return;
+                    }
+                })
             }
-            try {
-                // const res = await uploadFile(password, formDataArr[index]); // 调用上传函数上传当前分片，此处为调用上传的接口
-                const res = await uploadFile(formDataArr[index]); // 调用上传函数上传当前分片，此处为调用上传的接口
-                console.log('uploadFile-res', res);
-                console.log(`分片 ${index + 1} 上传成功`);
-                setIsGenerate(true);
-                message.success('上传成功');
-                // props.setUrl(res.data)   //二维码url
-                setFileList([]);
-                // 递归调用上传下一个分片
-                await uploadChunk(index + 1);
-                return;
-            } catch (error) {
-                console.error(`分片 ${index + 1} 上传失败`, error);
-                message.error("文件上传失败！");
-                return;
-            }
-        };
-
-        // 开始递归上传第一个分片
-        await uploadChunk(0);
+            if(len === formDataArr.length) resolve(null);
+        })
     }
 
     return { uploadChunk }

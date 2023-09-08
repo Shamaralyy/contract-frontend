@@ -49,10 +49,23 @@ function SetFile(props: Props) {
   const fileArr: any = [];
   //输入密码后点击确认按钮
   function commit() {
+    setIsGenerate(true);
     fileList.forEach((file) => {
       fileArr.push(file);
     });
-    uploadChunk();
+    uploadChunk()
+      .then(() => {
+        message.success("文件上传成功！");
+        setFileList([])
+        // props.setUrl(res.data)   //二维码url
+      })
+      .catch((error) => {
+        console.error(`分片上传失败`, error);
+        message.error("文件上传失败！");
+      })
+      .finally(() => {
+        setIsGenerate(false);
+      })
   }
 
   const paramObj = { password, fileArr, setFileList, setIsGenerate };
