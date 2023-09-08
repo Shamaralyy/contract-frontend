@@ -84,21 +84,22 @@ export default function useFileSlicing(uploadFile, paramObj) {
         return new Promise(async (resolve, reject) => {
             await handleFileChange();
             let len = 0;
-            for (let index = 0; index < formDataArr.length; index++) {
+            let index = 0;
+            for (index; index < formDataArr.length; index++) {
                 formDataArr[index].forEach(async (item: any) => {
+                    len++;
                     try {
                         const res = await uploadFile(item.get("file"), item.get("name"), item.get("chunks"), item.get("chunk")); // 调用上传函数上传当前分片，此处为调用上传的接口
                         console.log('uploadFile-res', res);
-                        len++;
+                        if (index === len) resolve(res);
                     } catch (error) {
                         reject(error);
                         return;
                     }
                 })
             }
-            if (len === formDataArr.length) resolve(null);
+
         })
     }
-
     return { uploadChunk }
 }

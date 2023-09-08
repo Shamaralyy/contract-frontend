@@ -55,10 +55,10 @@ function SetFile(props: Props) {
       fileArr.push(file);
     });
     uploadChunk()
-      .then(() => {
+      .then((res: any) => {
         message.success("文件上传成功！");
         setFileList([])
-        // props.setUrl(res.data)   //二维码url
+        props.setUrl(res.data)   //二维码url
       })
       .catch((error) => {
         console.error(`分片上传失败`, error);
