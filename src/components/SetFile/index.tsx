@@ -29,7 +29,8 @@ function SetFile(props: Props) {
       setFileList(newFileList);
     },
     beforeUpload: (file) => {
-      setFileList([...fileList, file]);
+      if (file.size > 10 * 1024 * 1024 * 1024) message.error('文件大小必须在10GB以下');
+      else setFileList([...fileList, file]);
       return false;
     },
   };

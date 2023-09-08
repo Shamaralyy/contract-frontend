@@ -11,7 +11,7 @@ export default function useFileSlicing(uploadFile, paramObj) {
         return new Promise((resolve) => {
             const spark = new SparkMD5.ArrayBuffer();
             const fileReader = new FileReader();
-            const chunkSize = 5 * 1024 * 1024;
+            const chunkSize = 5 * 1024 * 1024 * 1024;
             let currentChunk = 0;
 
             fileReader.onload = function (e: any) {
@@ -63,7 +63,7 @@ export default function useFileSlicing(uploadFile, paramObj) {
                 const md5 = await calculateMD5(file); // 计算文件的 MD5 值
                 md5Ref.current = md5; // 保存 MD5 值到引用
                 // 将文件划分成多个分片并保存到引用对象中
-                const chunksList: any = chunkFile(file, 5 * 1024 * 1024);
+                const chunksList: any = chunkFile(file, 5 * 1024 * 1024 * 1024);
                 const formData = new FormData();
                 //chunkRefs:将多个chunk转为formData
                 chunkRefs.current = chunksList.map((chunk: any, index: any) => {
@@ -96,7 +96,7 @@ export default function useFileSlicing(uploadFile, paramObj) {
                     }
                 })
             }
-            if(len === formDataArr.length) resolve(null);
+            if (len === formDataArr.length) resolve(null);
         })
     }
 
