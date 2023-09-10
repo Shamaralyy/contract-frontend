@@ -5,6 +5,7 @@ import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
 import useValidate from '@/hooks/useValidate';
 import useFileSlicing from '@/hooks/useFileSlicing';
 import { uploadFile } from '@/api/setFile/setFile';
+import { getBase64URL } from '@/utils/base64ToUrl';
 import './index.css'
 
 interface Props {
@@ -58,7 +59,8 @@ function SetFile(props: Props) {
       .then((res: any) => {
         message.success("文件上传成功！");
         setFileList([])
-        props.setUrl(res.data)   //二维码url
+        const url = getBase64URL(res.data);   //二维码url
+        props.setUrl(url);
       })
       .catch((error) => {
         console.error(`分片上传失败`, error);
