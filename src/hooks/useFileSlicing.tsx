@@ -1,7 +1,10 @@
-import { useRef } from 'react'
+import { UploadFile } from 'antd';
+import { AxiosResponse } from 'axios';
+import { Dispatch, SetStateAction, useRef } from 'react'
+// @ts-ignore
 import SparkMD5 from "spark-md5";
 
-export default function useFileSlicing(uploadFile, paramObj) {
+export default function useFileSlicing(uploadFile: { (file: any, name: string, chunks: number, chunk: number): Promise<AxiosResponse<any, any>>; (arg0: any, arg1: any, arg2: any, arg3: any): any; }, paramObj: { password?: string; fileArr: any; setFileList?: Dispatch<SetStateAction<UploadFile<any>[]>>; setIsGenerate?: Dispatch<SetStateAction<boolean>>; }) {
     const chunkRefs: any = useRef([]); // 保存分片引用的引用
     const md5Ref: any = useRef(""); // 保存 MD5 值的引用
     const { fileArr } = paramObj;

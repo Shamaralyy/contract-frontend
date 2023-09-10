@@ -11,7 +11,7 @@ import request from "@/utils/request";
 //     })
 // }
 
-export function uploadFile(file: any,name:string,chunks:number,chunk:any) {
+export function uploadFile(file: any,name:string,chunks:number,chunk:number) {
     return request({
         url: '/uploadFile',
         method: 'post',

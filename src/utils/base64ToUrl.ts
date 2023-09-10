@@ -1,10 +1,10 @@
-export function getBase64URL(pic) {
+export function getBase64URL(pic: any) {
     const blob = base64ImgtoFile(pic)
     const blobUrl = window.URL.createObjectURL(blob);
     return blobUrl
 }
 
-export function base64ImgtoFile (dataurl, filename = 'file') {
+export function base64ImgtoFile (dataurl: string, filename = 'file') {
     //将base64格式分割：['data:image/png;base64','XXXX']
     // const arr = dataurl.split(',')
     

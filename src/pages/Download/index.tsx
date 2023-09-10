@@ -28,6 +28,7 @@ const App: React.FC = () => {
         <div className='container'>
             <div>
                 <p className='title'>提取文件：</p>
+                {/* @ts-ignore */}
                 <Input status={iptStatus} placeholder="请输入密码……" value={password} onChange={e => changeIpt(e.target.value)} />
                 <p className='tip'>{iptStatus && '密码不能为空'}</p>
                 <Button className='btn-download' type="primary" onClick={ok}>确定</Button>
