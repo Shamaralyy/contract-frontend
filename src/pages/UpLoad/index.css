@@ -17,10 +17,45 @@
 }
 
 .upload-btn {
-    width: 160px;
+    width: 120px;
+    margin-top: 20px;
 }
 
-.QRcode {
-    width: 150px;
-    height: 150px;
+.ant-upload-drag  {
+    padding: 30px;
+}
+
+.complete-btn {
+    width: 100px;
+    margin-top: 10px;
+}
+
+.ipt {
+    margin-top: 20px;
+}
+
+.tip {
+    color: red;
+    font-size: 10px;
+    margin-left: 3px;
+}
+
+.loading-space {
+    margin-top: 50px;
+}
+
+.clear-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.signature-container {
+    width: 600px;
+    height: 200px;
+    margin-top: 40px;
+    background-color: "#fff";
+    border-radius: 7px;
+    border: 1px solid #ccc;
+    position: relative
 }

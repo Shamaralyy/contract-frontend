@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useRef } from 'react'
 // @ts-ignore
 import SparkMD5 from "spark-md5";
 
-export default function useFileSlicing(uploadFile: { (file: any, name: string, chunks: number, chunk: number): Promise<AxiosResponse<any, any>>; (arg0: any, arg1: any, arg2: any, arg3: any): any; }, paramObj: { password?: string; fileArr: any; setFileList?: Dispatch<SetStateAction<UploadFile<any>[]>>; setIsGenerate?: Dispatch<SetStateAction<boolean>>; }) {
+export default function useFileSlicing(uploadFile: { (file: any, name: string, chunks: number, chunk: number): Promise<AxiosResponse<any, any>>; (arg0: any, arg1: any, arg2: any, arg3: any): any; }, paramObj: { password?: string; fileArr: any; setFileList?: Dispatch<SetStateAction<UploadFile<any>[]>>;}) {
     const chunkRefs: any = useRef([]); // 保存分片引用的引用
     const md5Ref: any = useRef(""); // 保存 MD5 值的引用
     const { fileArr } = paramObj;
@@ -83,7 +83,8 @@ export default function useFileSlicing(uploadFile: { (file: any, name: string, c
         })
     };
 
-    async function uploadChunk() {
+    //循环遍历每个文件，再每次循环中上传一个完整文件后返回最后的res
+    async function uploadChunk() {        
         return new Promise(async (resolve, reject) => {
             await handleFileChange();
             let len = 0;
