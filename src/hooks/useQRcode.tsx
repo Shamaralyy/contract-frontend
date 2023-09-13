@@ -62,7 +62,7 @@ export default function useQRcode() {
                 setFileList([])
                 navigate('/file', {
                     state: {
-                        QRcodeUrls: [res.data],
+                        QRcodeUrls: [res],
                         signatureUrl
                     }
                 });
@@ -81,7 +81,7 @@ export default function useQRcode() {
 
     const setFileSpace = (
         <div>
-            <Dragger {...draggerProps}>
+            <Dragger style={{'maxHeight':'32vh'}} {...draggerProps}>
                 <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                 </p>

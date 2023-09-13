@@ -7,9 +7,9 @@ import './index.css'
 
 export default function index() {
     const location = useLocation();
-    const { QRcodeUrls, signatureUrl } = location.state;
+    const { QRcodeUrls, signatureUrl } = location.state ? location.state : { QRcodeUrls: [], signatureUrl: '' };
     // const html = location.state?.html;
-    const [htmlContent, setHtmlContent] = useState('');
+    // const [htmlContent, setHtmlContent] = useState('');
     const pdfRef = useRef<any>();
 
     useEffect(() => {
@@ -17,7 +17,9 @@ export default function index() {
         // return () => {
         //     setHtmlContent('');
         // };
-        console.log('signatureUrl', signatureUrl);
+        console.log('QRcodeUrls', QRcodeUrls);
+        // console.log('signatureUrl', signatureUrl);
+        console.log('data:image/png;base64,' + QRcodeUrls[0]);
     }, []);
 
     const onExportPDF = () => {
@@ -35,7 +37,7 @@ export default function index() {
                     {
                         QRcodeUrls.map((url: string) => {
                             return (
-                                <img className="QRcode" src={url} alt="" />
+                                <img className="QRcode" src={'data:image/png;base64,' + url} alt="" />
                             )
                         })
                     }

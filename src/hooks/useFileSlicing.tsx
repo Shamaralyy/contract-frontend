@@ -1,6 +1,7 @@
 import { UploadFile } from 'antd';
 import { AxiosResponse } from 'axios';
-import { Dispatch, SetStateAction, useRef } from 'react'
+import { Dispatch, SetStateAction, useRef, useState } from 'react'
+import axios from 'axios';
 // @ts-ignore
 import SparkMD5 from "spark-md5";
 
@@ -66,7 +67,7 @@ export default function useFileSlicing(uploadFile: { (file: any, name: string, c
                 const md5 = await calculateMD5(file); // 计算文件的 MD5 值
                 md5Ref.current = md5; // 保存 MD5 值到引用
                 // 将文件划分成多个分片并保存到引用对象中
-                const chunksList: any = chunkFile(file, 5 * 1024 * 1024 * 1024);
+                const chunksList: any = chunkFile(file, 5 * 1024 * 1024 * 1024); //保存着当前文件的多个分片
                 const formData = new FormData();
                 //chunkRefs:将多个chunk转为formData
                 chunkRefs.current = chunksList.map((chunk: any, index: any) => {
@@ -87,6 +88,7 @@ export default function useFileSlicing(uploadFile: { (file: any, name: string, c
     async function uploadChunk() {        
         return new Promise(async (resolve, reject) => {
             await handleFileChange();
+            console.log('formDataArr',formDataArr);
             let len = 0;
             let index = 0;
             for (index; index < formDataArr.length; index++) {
@@ -94,8 +96,10 @@ export default function useFileSlicing(uploadFile: { (file: any, name: string, c
                     len++;
                     try {
                         const res = await uploadFile(item.get("file"), item.get("name"), item.get("chunks"), item.get("chunk")); // 调用上传函数上传当前分片，此处为调用上传的接口
-                        console.log('uploadFile-res', res);
-                        if (index === len) resolve(res);
+                        resolve(res.data);
+                        // axios.get("/uploadFile").then(res => {
+                        //     console.log('uploadFile-res',res);
+                        //     resolve(res.data)
                     } catch (error) {
                         reject(error);
                         return;
