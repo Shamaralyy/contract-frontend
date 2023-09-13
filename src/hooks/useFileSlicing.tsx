@@ -5,7 +5,7 @@ import axios from 'axios';
 // @ts-ignore
 import SparkMD5 from "spark-md5";
 
-export default function useFileSlicing(uploadFile: { (file: any, name: string, chunks: number, chunk: number): Promise<AxiosResponse<any, any>>; (arg0: any, arg1: any, arg2: any, arg3: any): any; }, paramObj: { password?: string; fileArr: any; setFileList?: Dispatch<SetStateAction<UploadFile<any>[]>>;}) {
+export default function useFileSlicing(uploadFile: { (file: any, name: string, chunks: number, chunk: number): Promise<AxiosResponse<any, any>>; (arg0: any, arg1: any, arg2: any, arg3: any): any; }, paramObj: { password?: string; fileArr: any; setFileList?: Dispatch<SetStateAction<UploadFile<any>[]>>; }) {
     const chunkRefs: any = useRef([]); // 保存分片引用的引用
     const md5Ref: any = useRef(""); // 保存 MD5 值的引用
     const { fileArr } = paramObj;
@@ -85,28 +85,33 @@ export default function useFileSlicing(uploadFile: { (file: any, name: string, c
     };
 
     //循环遍历每个文件，再每次循环中上传一个完整文件后返回最后的res
-    async function uploadChunk() {        
+    async function uploadChunk() {
         return new Promise(async (resolve, reject) => {
             await handleFileChange();
-            console.log('formDataArr',formDataArr);
-            let len = 0;
-            let index = 0;
-            for (index; index < formDataArr.length; index++) {
-                formDataArr[index].forEach(async (item: any) => {
-                    len++;
+            console.log('formDataArr', formDataArr);
+            let arr = [];
+            let counter = 0;
+            for (let index = 0; index < formDataArr.length; index++) {
+                console.log('index', index);
+                const items = formDataArr[index];
+                for (const item of items) {
                     try {
-                        const res = await uploadFile(item.get("file"), item.get("name"), item.get("chunks"), item.get("chunk")); // 调用上传函数上传当前分片，此处为调用上传的接口
-                        resolve(res.data);
-                        // axios.get("/uploadFile").then(res => {
-                        //     console.log('uploadFile-res',res);
-                        //     resolve(res.data)
+                        // const res = await axios.get("/uploadFile");
+                        const res = await uploadFile(item.get("file"), item.get("name"), item.get("chunks"), item.get("chunk"));
+                        console.log('uploadFile-res', res);
+                        if (item.get("chunks") - 1 == item.get("chunk")) {
+                            arr.push(res.data);  // 分片后最终结果
+                        }
+                        counter++;
+                        if (counter === formDataArr.length) {
+                            resolve(arr); // 当计数器等于数组长度时，所有操作都完成，调用 resolve
+                        }
                     } catch (error) {
                         reject(error);
                         return;
                     }
-                })
+                }
             }
-
         })
     }
     return { uploadChunk }

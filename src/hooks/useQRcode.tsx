@@ -62,7 +62,7 @@ export default function useQRcode() {
                 setFileList([])
                 navigate('/file', {
                     state: {
-                        QRcodeUrls: [res],
+                        QRcodeUrls: res,
                         signatureUrl
                     }
                 });

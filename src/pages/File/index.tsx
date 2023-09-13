@@ -19,7 +19,7 @@ export default function index() {
         // };
         console.log('QRcodeUrls', QRcodeUrls);
         // console.log('signatureUrl', signatureUrl);
-        console.log('data:image/png;base64,' + QRcodeUrls[0]);
+        // console.log('data:image/png;base64,' + QRcodeUrls[0]);
     }, []);
 
     const onExportPDF = () => {
@@ -35,9 +35,9 @@ export default function index() {
                     附属文件均真实有效。如有虚假本人愿为其造成的后果负全部责任。</p>
                 <div className='QRcode-box'>
                     {
-                        QRcodeUrls.map((url: string) => {
+                        QRcodeUrls.map((url: string,index:number) => {
                             return (
-                                <img className="QRcode" src={'data:image/png;base64,' + url} alt="" />
+                                <img key={index} className="QRcode" src={'data:image/png;base64,' + url} alt="" />
                             )
                         })
                     }
