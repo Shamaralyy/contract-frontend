@@ -88,11 +88,9 @@ export default function useFileSlicing(uploadFile: { (file: any, name: string, c
     async function uploadChunk() {
         return new Promise(async (resolve, reject) => {
             await handleFileChange();
-            console.log('formDataArr', formDataArr);
             let arr = [];
             let counter = 0;
             for (let index = 0; index < formDataArr.length; index++) {
-                console.log('index', index);
                 const items = formDataArr[index];
                 for (const item of items) {
                     try {

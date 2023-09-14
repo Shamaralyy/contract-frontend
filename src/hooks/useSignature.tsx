@@ -9,7 +9,6 @@ export default function useSignature() {
     const sigCanvas = useRef({});
 
     const getCanvasImage = () => {
-        console.log('sigCanvas', sigCanvas);
         const base64Img = sigCanvas.current.getTrimmedCanvas().toDataURL("image/png");
         return base64Img;
     };

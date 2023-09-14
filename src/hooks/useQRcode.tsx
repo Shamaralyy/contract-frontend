@@ -8,11 +8,6 @@ import useFileSlicing from '@/hooks/useFileSlicing';
 import { uploadFile } from '@/api/setFile/setFile';
 import { getBase64URL } from '@/utils/base64ToUrl';
 
-// interface Props {
-//     len: number;
-//     setUrl: Function;
-// }
-
 export default function useQRcode() {
     const navigate = useNavigate();
     const { open, setOpen, password, iptStatus, changeIpt, ok } = useValidate(commit, () => { });
@@ -41,6 +36,10 @@ export default function useQRcode() {
     function commit(signatureUrl: string) {
         if (!fileList.length) {
             message.error('请先上传文件');
+            return;
+        }
+        if(signatureUrl === 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC') {
+            message.error("请在下方进行手写签名");
             return;
         }
         fileList.forEach((file) => {

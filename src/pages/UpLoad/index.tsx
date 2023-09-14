@@ -9,7 +9,7 @@ export default function upLoad() {
   const [url] = useState<string>('');
   // const [value, setValue] = useState<string>('');
   const { Signature, getCanvasImage } = useSignature();
-  const { setFileSpace, isGenerate, commit } = useQRcode({signatureUrl:'123'});
+  const { setFileSpace, isGenerate, commit } = useQRcode();
 
   // const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
   //   setValue(e.target.value)
